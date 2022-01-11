@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap');
+
+// color
+$main: rgb(32, 32, 32);
+$light: rgb(238, 238, 238);
+$contrast: #00afec;
+$radius: 3px;
+$big-radius: 5px;
+
+@import './reset';
+@import './header';
+@import './content';
+@import './vars';

@@ -1,0 +1,32 @@
+.header {
+  position: sticky;
+  height: 60px;
+
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+
+  background: $main;
+  color: $light;
+}
+
+.header_inner {
+  display: flex;
+  width: 1280px;
+  height: 60px;
+
+  margin: 0 auto;
+  
+  overflow: hidden;
+  align-items: center;
+}
+
+.header_logo {
+  font-weight: 700;
+  font-size: 18px;
+
+  @media(max-width: 400px) {
+    font-size: 16px;
+  }
+}
