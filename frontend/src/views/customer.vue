@@ -111,7 +111,10 @@
 import Header from '../components/header.vue'
 
 export default {
-    components: { Header }
+    components: { Header },
+    async beforeMount() {
+        document.title = 'Заказчик';
+    }
 }
 </script>
 

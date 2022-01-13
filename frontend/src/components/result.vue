@@ -25,7 +25,7 @@
 
         <div class="cart_item">
           <p>Номер контpакта:</p>
-          <span class="fool-btn">{{contract.regNum}}</span>
+          <span class="fool-btn"><a :href="'/contract/' + contract.regNum" target="_blanck"><u>{{contract.regNum}}</u></a></span>
         </div>
 
         <div class="cart_item">
@@ -45,12 +45,16 @@
 
         <div class="cart_item">
           <p>Заказчик:</p>
-          <span class="fool-btn"> {{ contract.customer.fullName }}</span>
+          <span class="fool-btn"><a :href="'customer/' + contract.customer.regNum" target="_blanck"><u>{{ contract.customer.fullName }}</u></a></span>
         </div>
 
         <div class="cart_item">
           <p>Поставщик:</p>
-          <span class="fool-btn" v-if="contract.suppliers">{{ contract.suppliers[0].organizationName }}</span>
+          <span class="fool-btn" v-if="contract.suppliers">
+            <a :href="`supplier/inn=${contract.suppliers[0].inn}&kpp=${contract.suppliers[0].kpp}`" target="_blanck">
+              <u>{{ contract.suppliers[0].organizationName }}</u>
+            </a>
+          </span>
         </div>
 
         <div class="cart_item">
@@ -61,33 +65,8 @@
         <div class="cart_item">
           <p>Предмет:</p>
           <span class="fool-btn" v-if="contract.products">{{ contract.products[0].name }} ... 
-            <u @click="changeIdsShowTable(contract.regNum)"> {{ idsShowTable[contract.regNum] || 'показать' }} все ({{ contract.products.length }})</u>
+            <a :href="'/contract/' + contract.regNum" target="_blanck"><u> показать все ({{ contract.products.length }})</u></a>
           </span>
-        </div>
-
-        <div class="cart_item" v-if="idsShowTable[contract.regNum]">
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Наименование</th>
-                <th>Ед. измерения</th>
-                <th>Количество</th>
-                <th>Стоимость</th>
-                <th>Сумма</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(prod, index) in contract.products" :key="prod">
-                <td>{{ index + 1 }}</td>
-                <td>{{ prod.name }}</td>
-                <td v-if="prod.OKEI">{{ prod.OKEI.name }}</td><td v-else>?</td>
-                <td v-if="prod.quantity">{{ prod.quantity }}</td><td v-else>?</td>
-                <td v-if="prod.price">{{ moneyFormat(prod.price) }}</td><td v-else>?</td>
-                <td v-if="prod.sum">{{ moneyFormat(prod.sum) }}</td><td v-else>?</td>
-              </tr>
-            </tbody>
-          </table>
         </div>
 
         <button @click="showItemList(contract.regNum)" class="download_btn">

@@ -1,5 +1,5 @@
-const contracts = require('./contracts');
+const api = require('./api');
 
 module.exports = {
-    contracts
+    api
 }

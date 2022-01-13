@@ -22,7 +22,7 @@ if (!config.IS_PRODUCTION) {
 
 app.use(express.json());
 
-app.use('/api', routes.contracts);
+app.use('/api', routes.api);
 
 app.listen(config.PORT, () => {
     console.log('Server started  ' + config.PORT);
