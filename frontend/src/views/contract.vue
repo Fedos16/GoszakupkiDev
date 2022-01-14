@@ -63,8 +63,6 @@ export default {
             this.products = [];
             alert(`Ошибка: ${request.data.text}`);
         }
-
-        return { id }
     },
     data() {
         return {

@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const axios = require('axios');
 
-const urlAPI = 'http://openapi.clearspending.ru/restapi/v3/contracts/search/';
+const urlAPI = 'http://openapi.clearspending.ru/restapi/v3/';
 
 router.post('/contracts', async (req, res) => {
     try {
@@ -11,7 +11,7 @@ router.post('/contracts', async (req, res) => {
 
         let arrReq = keys.map(key => { return `${key}=${body[key]}` });
 
-        const url = `${urlAPI}?${arrReq.join('&')}`;
+        const url = `${urlAPI}contracts/search/?${arrReq.join('&')}`;
 
         console.log(`Ищем контракты по ссылке ... ${url}`);
 
@@ -31,7 +31,7 @@ router.post('/getContract', async (req, res) => {
 
         const { id } = req.body;
 
-        const url = `${urlAPI}?regnum=${id}`;
+        const url = `${urlAPI}contracts/search/?regnum=${id}`;
 
         console.log(`Получаем контракт по ссылке ... ${url}`);
 
@@ -47,8 +47,20 @@ router.post('/getContract', async (req, res) => {
     }
 });
 
-router.post('/customer/:id', async (req, res) => {
+router.post('/getCustomer', async (req, res) => {
     try {
+
+        const { id } = req.body;
+
+        const url = `${urlAPI}customers/search/?spzregnum=${id}`;
+
+        console.log(`Получаем заказчика по ссылке ... ${url}`);
+
+        const reqAPI = await axios.get(encodeURI(url));
+        const data = reqAPI.data;
+
+
+        res.json({ ok: true, data });
 
     } catch(e) {
         console.log(e);
