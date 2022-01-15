@@ -2,10 +2,17 @@
     <div>
         <Header />
         <div class="container">
-            <Options v-on:options="optionFilter" v-bind:disabledState="disabledState" />
+            <Options 
+                @options="optionFilter"
+                :disabledState="disabledState"
+                :sortType="sort"
+            />
             <Results
                 :contracts="contracts" 
                 :options="options"
+                :totalContracts="totalContracts"
+                :sortType="sort"
+                @changeStateSort="changeStateSort"
             />
         </div>
     </div>
@@ -25,8 +32,10 @@ export default {
     data() {
         return {
             contracts: [],
+            totalContracts: 0,
             options: [],
-            disabledState: 'Найти'
+            disabledState: 'Найти',
+            sort: ''
         }
     },
     methods: {
@@ -49,6 +58,7 @@ export default {
             let reqStatus = request.data.ok;
             if (reqStatus) {
                 this.contracts = request.data.data.contracts.data;
+                this.totalContracts = request.data.data.contracts.total;
             } else {
                 this.contracts = [];
                 alert(`Ошибка: ${request.data.text}`);
@@ -57,6 +67,9 @@ export default {
             this.disabledState = 'Найти';
 
         },
+        changeStateSort(name) {
+            this.sort = name;
+        }
     },
     mounted() {
         this.title()

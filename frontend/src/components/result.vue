@@ -11,7 +11,18 @@
     </div>
 
     <div v-if="contracts.length > 0" class="result_attr">
-      <h3>Результаты поиска</h3>
+      <h3>Найдено контрактов: {{ totalContracts }} (максимум 500)</h3>
+    </div>
+
+    <div class="result_attr pos_right">
+      <button @click="changeStateFilter" class="btn_reverce" :class="{ 'sort_active': sortType == 'price' || sortType == '-price' }" value="price">
+        По сумме контракта <span v-if="sortType == 'price' || sortType == '-price'">| 
+          <i class="fas" :class="{ 'fa-chevron-down': sortType=='-price', 'fa-chevron-up': sortType=='price' }"></i></span>
+      </button>
+      <button @click="changeStateFilter" class="btn_reverce" :class="{ 'sort_active': sortType == 'signDate' || sortType == '-signDate' }" value="signDate">
+        По дате заключения <span v-if="sortType == 'signDate' || sortType == '-signDate'">| 
+          <i class="fas" :class="{ 'fa-chevron-down': sortType=='-signDate', 'fa-chevron-up': sortType=='signDate' }"></i></span>
+      </button>
     </div>
 
     <div class="result_inner">
@@ -25,12 +36,26 @@
 
         <div class="cart_item">
           <p>Номер контpакта:</p>
-          <span class="fool-btn"><a :href="'/contract/' + contract.regNum" target="_blanck"><u>{{contract.regNum}}</u></a></span>
+          <span class="fool-btn"><a :href="'/contract/' + contract.regNum" target="_blank"><u>{{contract.regNum}}</u></a></span>
         </div>
 
         <div class="cart_item">
           <p>Статус контpакта:</p>
           <span class="fool-btn">{{ getStatusNameContract(contract.currentContractStage) }}</span>
+        </div>
+
+        <div class="cart_item">
+          <p>Заказчик:</p>
+          <span class="fool-btn"><a :href="'customer/' + contract.customer.regNum" target="_blank"><u>{{ contract.customer.fullName }}</u></a></span>
+        </div>
+
+        <div class="cart_item">
+          <p>Поставщик:</p>
+          <span class="fool-btn" v-if="contract.suppliers">
+            <a :href="`supplier/inn=${contract.suppliers[0].inn}&kpp=${contract.suppliers[0].kpp}`" target="_blank">
+              <u>{{ contract.suppliers[0].organizationName }}</u>
+            </a>
+          </span>
         </div>
 
         <div class="cart_item">
@@ -41,20 +66,6 @@
         <div class="cart_item">
           <p>Дата заключения:</p>
           <span class="fool-btn">{{ new Date(contract.signDate).toLocaleDateString('ru-RU') }}</span>
-        </div>
-
-        <div class="cart_item">
-          <p>Заказчик:</p>
-          <span class="fool-btn"><a :href="'customer/' + contract.customer.regNum" target="_blanck"><u>{{ contract.customer.fullName }}</u></a></span>
-        </div>
-
-        <div class="cart_item">
-          <p>Поставщик:</p>
-          <span class="fool-btn" v-if="contract.suppliers">
-            <a :href="`supplier/inn=${contract.suppliers[0].inn}&kpp=${contract.suppliers[0].kpp}`" target="_blanck">
-              <u>{{ contract.suppliers[0].organizationName }}</u>
-            </a>
-          </span>
         </div>
 
         <div class="cart_item">
@@ -86,12 +97,11 @@ export default {
     return {
       contractsData: this.contracts,
       optionsData: this.options,
-      idsShowTable: {},
       isShowItemList: 0,
       activeContract: null
     }
   },
-  props: ['contracts', 'options'],
+  props: ['contracts', 'options', 'totalContracts', 'sortType'],
   methods: {
     downloadCard(e) {
 
@@ -138,13 +148,6 @@ export default {
       if (letter in listStatuses) return listStatuses[letter];
       return 'Неизвестно';
     },
-    changeIdsShowTable(id) {
-      if (id in this.idsShowTable) {
-        delete this.idsShowTable[id];
-      } else {
-        this.idsShowTable[id] = 'скрыть';
-      }
-    },
     showItemList(idContract) {
       this.activeContract = idContract;
       this.isShowItemList = 1;
@@ -161,6 +164,27 @@ export default {
 
       elItemList.style.top = `${y - yRes}px`;
       elItemList.style.left = `${x - xRes - 70}px`;
+
+    },
+    changeStateFilter(e) {
+      let element = e.target;
+      let val = element.value;
+
+      if (val == 'price') {
+        this.$emit('changeStateSort', '-price');
+        e.target.value = '-price';
+      } else if (val == '-price') {
+        this.$emit('changeStateSort', 'price');
+        e.target.value = 'price';
+      }
+      
+      if (val == 'signDate') {
+        this.$emit('changeStateSort', '-signDate');
+        e.target.value = '-signDate';
+      } else if (val == '-signDate') {
+        this.$emit('changeStateSort', 'signDate');
+        e.target.value = 'signDate';
+      }
 
     }
   },

@@ -47,22 +47,9 @@ const serverUrl = process.env.VUE_APP_SERVER_URL;
 export default {
     name: 'Contract',
     components: { Header },
-    async beforeMount() {
+    async created() {
         document.title = 'Контракт';
-
-        const route = useRoute();
-
-        const id = route.params.id;
-        this.id = id;
-
-        const request = await axios.post(`${serverUrl}api/getContract`, { id });
-        let reqStatus = request.data.ok;
-        if (reqStatus) {
-            this.products = request.data.data.contracts.data[0].products;
-        } else {
-            this.products = [];
-            alert(`Ошибка: ${request.data.text}`);
-        }
+        await this.setDataFromServer();
     },
     data() {
         return {
@@ -74,6 +61,20 @@ export default {
         moneyFormat(money) {
             return (String(money).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ')).replace(' руб.', '');
         },
+        async setDataFromServer() {
+            const route = useRoute();
+            const id = route.params.id;
+            this.id = id;
+
+            const request = await axios.post(`${serverUrl}api/getContract`, { id });
+            let reqStatus = request.data.ok;
+            if (reqStatus) {
+                this.products = request.data.data.contracts.data[0].products;
+            } else {
+                this.products = [];
+                alert(`Ошибка: ${request.data.text}`);
+            }
+        }
     }
 }
 </script>

@@ -116,6 +116,13 @@
 
   margin: 0 auto;
 
+  .result_attr {
+    display: flex;
+  }
+  .pos_right {
+    justify-content: flex-end;
+  }
+
   @media(max-width: 1280px) {
     margin: 0 20px;
   }
@@ -210,3 +217,4 @@
     width: 15px;
   }
 }
+

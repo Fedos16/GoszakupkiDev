@@ -144,7 +144,16 @@
         </select>
       </div>
 
-      <div class="option"></div>
+      <div class="option">
+        <label>Сортировать</label>
+        <select v-model="sort" name="sort" id="id_sort">
+          <option value=""></option>
+          <option value="-price">Max сумма вверху</option>
+          <option value="price">Min сумма вверху</option>
+          <option value="-signDate">Новые вверху</option>
+          <option value="signDate">Старые вверху</option>
+        </select>
+      </div>
       <div class="option"></div>
 
     </div>
@@ -183,7 +192,7 @@ export default {
       fz: ''
     }
   },
-  props: ['disabledState'],
+  props: ['disabledState', 'sortType'],
   methods: {
     toApply() {
       let options = {};
@@ -230,6 +239,12 @@ export default {
   },
   mounted() {
     this.iniAirDatePicker();
+  },
+  watch: {
+    sortType: function (value) {
+      this.sort = value;
+      this.toApply();
+    }
   }
 }
 </script>

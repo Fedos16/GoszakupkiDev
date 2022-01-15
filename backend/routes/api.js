@@ -68,8 +68,26 @@ router.post('/getCustomer', async (req, res) => {
     }
 });
 
-router.post('/supplier/:id', async (req, res) => {
+router.post('/getSupplier', async (req, res) => {
     try {
+
+        const { inn, kpp } = req.body;
+
+        let paramsReq = '?';
+        if (inn) paramsReq += `inn=${inn}`;
+        if (kpp != 'undefined') {
+            (inn) ? paramsReq += `&kpp=${kpp}` : paramsReq += `kpp=${kpp}`;
+        }
+
+        const url = `${urlAPI}suppliers/search/${paramsReq}`;
+
+        console.log(`Получаем поставщика по ссылке ... ${url}`);
+
+        const reqAPI = await axios.get(encodeURI(url));
+        const data = reqAPI.data;
+
+
+        res.json({ ok: true, data });
 
     } catch(e) {
         console.log(e);
