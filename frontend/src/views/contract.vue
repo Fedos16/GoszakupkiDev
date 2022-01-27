@@ -4,7 +4,40 @@
         <div class="container">
             <div class="result">
                 <div class="result_attr">
-                    <h3>Информация о контракте № {{ id }}</h3>
+                    <h3 v-if="contract">Информация о контракте № <a :href="contract.contractUrl" target="_blank"><u>{{ id }}</u></a></h3>
+                </div>
+                <div class="cart" v-if="contract">
+                    <div class="cart_item">
+                        <p>Статус контракта</p>
+                        <span class="fool-btn">{{ getStatusNameContract(contract.currentContractStage) }}</span>
+                    </div>
+                    <div class="cart_item">
+                        <p>Заказчик</p>
+                        <span class="fool-btn"> {{ contract.customer.fullName }}</span>
+                    </div>
+                    <div class="cart_item">
+                        <p>Поставщик</p>
+                        <span class="fool-btn">{{ contract.suppliers[0].organizationName }}</span>
+                    </div>
+                    <div class="cart_item">
+                        <p>Регион</p>
+                        <span class="fool-btn">{{ contract.regionCode }}</span>
+                    </div>
+                    <div class="cart_item">
+                        <p>Федеральный закон</p>
+                        <span class="fool-btn">{{ contract.fz }}</span>
+                    </div>
+                    <div class="cart_item">
+                        <p>Дата заключения</p>
+                        <span class="fool-btn">{{ new Date(contract.signDate).toLocaleDateString('ru-RU') }}</span>
+                    </div>
+                    <div class="cart_item">
+                        <p>Сумма контакта</p>
+                        <span class="fool-btn">{{ moneyFormat(contract.price) }}</span>
+                    </div>
+                </div>
+                <div class="result_attr">
+                    <h3>Предметы контракта</h3>
                 </div>
                 <div class="cart">
                     <div class="cart_item" v-if="products.length > 0">
@@ -54,13 +87,11 @@ export default {
     data() {
         return {
             id: '',
-            products: []
+            products: [],
+            contract: false
         }
     },
     methods: {
-        moneyFormat(money) {
-            return (String(money).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ')).replace(' руб.', '');
-        },
         async setDataFromServer() {
             const route = useRoute();
             const id = route.params.id;
@@ -70,6 +101,7 @@ export default {
             let reqStatus = request.data.ok;
             if (reqStatus) {
                 this.products = request.data.data.contracts.data[0].products;
+                this.contract = request.data.data.contracts.data[0];
             } else {
                 this.products = [];
                 alert(`Ошибка: ${request.data.text}`);

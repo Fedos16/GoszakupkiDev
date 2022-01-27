@@ -129,9 +129,6 @@ export default {
         await this.setDataFromServer();
     },
     methods: {
-        moneyFormat(money) {
-            return (String(money).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ')).replace(' руб.', '');
-        },
         async setDataFromServer() {
             const route = useRoute();
             const id = route.params.id;

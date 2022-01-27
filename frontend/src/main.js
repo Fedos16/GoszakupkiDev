@@ -1,9 +1,12 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router.js';
-import VuePapaParse from 'vue-papa-parse';
+import helpers from './helpers';
+
 
 createApp(App)
+    .mixin({
+        methods: helpers
+    })
     .use(router)
-    .use(VuePapaParse)
     .mount('#app')

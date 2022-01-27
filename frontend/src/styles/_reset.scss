@@ -13,18 +13,6 @@
   font-size: 14px;
   box-sizing: border-box;
 }
-
-body {
-  &::-webkit-scrollbar {
-    background-color: transparent;
-    width: 6px;
-    height: 6px;
-  }
-  &::-webkit-scrollbar-thumb {
-    border-radius: 3px;
-    background-color: rgb(54, 54, 54);
-  }
-}
 .content {
   width: 100%;
   display: flex;
@@ -65,4 +53,16 @@ h2 {
 h3 {
   font-weight: 700;
   font-size: 24px;
+
+  a {
+    font-size: inherit;
+    u {
+      font-size: inherit;
+      text-decoration: underline;
+      color: rgb(34, 34, 218);
+    }
+    u:hover {
+      text-decoration: none;
+    }
+  }
 }

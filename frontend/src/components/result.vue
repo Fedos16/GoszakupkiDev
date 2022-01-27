@@ -4,8 +4,8 @@
 
     <div @mouseleave="isShowItemList = 0" @click="downloadCard($event)" v-show="isShowItemList == 1" class="itemList">
       <ul>
-        <li class="disabled-item">xlsx</li>
-        <li class="disabled-item">csv</li>
+        <li>xlsx</li>
+        <li>csv</li>
         <li>json</li>
       </ul>
     </div>
@@ -14,7 +14,7 @@
       <h3>Найдено контрактов: {{ totalContracts }} (максимум 500)</h3>
     </div>
 
-    <div class="result_attr pos_right">
+    <div v-if="contracts.length > 0" class="result_attr pos_right">
       <button @click="changeStateFilter" class="btn_reverce" :class="{ 'sort_active': sortType == 'price' || sortType == '-price' }" value="price">
         По сумме контракта <span v-if="sortType == 'price' || sortType == '-price'">| 
           <i class="fas" :class="{ 'fa-chevron-down': sortType=='-price', 'fa-chevron-up': sortType=='price' }"></i></span>
@@ -69,7 +69,7 @@
         </div>
 
         <div class="cart_item">
-          <p>Цена контракта:</p>
+          <p>Сумма контракта:</p>
           <span class="fool-btn">{{ moneyFormat(contract.price) }} рублей</span>
         </div>
 
@@ -92,6 +92,8 @@
 
 <script>
 
+import excel from 'xlsx';
+
 export default {
   data() {
     return {
@@ -105,6 +107,28 @@ export default {
   methods: {
     downloadCard(e) {
 
+      let setArrayForDownload = (contract) => {
+        let arr = [
+          [ 'Номер контракта', contract.regNum ],
+          [ 'Статус контракта', this.getStatusNameContract(contract.currentContractStage) ],
+          [ 'Заказчик', contract.customer.fullName ],
+          [ 'Поставщик', contract.suppliers[0].organizationName ],
+          [ 'Регион', contract.regionCode ],
+          [ 'Федеральный закон', contract.fz ],
+          [ 'Дата заключения контракта', new Date(contract.signDate) ],
+          [ 'Сумма контракта', this.moneyFormat(contract.price) ],
+          [],
+          [ 'Предметы контракта' ],
+          [ '#', 'Наименование', 'Ед. измерения', 'Количество', 'Стоимость', 'Сумма' ]
+        ];
+
+        contract.products.forEach((el, index) => {
+          arr.push([ index + 1, el.name, el.OKEI.name, el.quantity, this.moneyFormat(el.price), this.moneyFormat(el.sum) ]);
+        });
+
+        return arr;
+
+      }
       function setAndDownloadJSON(data) {
         data = JSON.stringify(data, null, '\t');
         const blob = new Blob([data], {type: 'text/plain'})
@@ -121,8 +145,6 @@ export default {
 
       const activeContract = this.activeContract;
 
-      console.log(activeContract);
-
       if (activeContract) {
         const contracts = this.contracts;
         let contract = contracts.find(row => row.regNum == activeContract);
@@ -130,23 +152,23 @@ export default {
         if (contract) {
           if (typeFile == 'json') {
             setAndDownloadJSON(contract);
+          } else if (typeFile == 'xlsx') {
+
+            let arr = setArrayForDownload(contract);
+            let worksheet = excel.utils.aoa_to_sheet(arr);
+            let wb = excel.utils.book_new();
+            excel.utils.book_append_sheet(wb, worksheet, "SheetJS");
+            excel.writeFile(wb, `${activeContract}.xlsx`);
+
+          } else if (typeFile == 'csv') {
+            let arr = setArrayForDownload(contract);
+            let worksheet = excel.utils.aoa_to_sheet(arr);
+            let wb = excel.utils.book_new();
+            excel.utils.book_append_sheet(wb, worksheet, "SheetJS");
+            excel.writeFile(wb, `${activeContract}.csv`);
           }
         }
       }
-    },
-    moneyFormat(money) {
-      return (String(money).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ')).replace(' руб.', '');
-    },
-    getStatusNameContract(letter) {
-      const listStatuses = {
-        'E': 'Исполнение',
-        'EC': 'Исполнение завершено',
-        'ET': 'Исполнение прекращено',
-        'IN': 'Аннулирован'
-      }
-
-      if (letter in listStatuses) return listStatuses[letter];
-      return 'Неизвестно';
     },
     showItemList(idContract) {
       this.activeContract = idContract;
