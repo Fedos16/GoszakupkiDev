@@ -50,17 +50,20 @@ router.post('/getContract', async (req, res) => {
 router.post('/getCustomer', async (req, res) => {
     try {
 
-        const { id } = req.body;
+        const { id, page } = req.body;
 
-        const url = `${urlAPI}customers/search/?spzregnum=${id}`;
+        let url = `${urlAPI}customers/search/?spzregnum=${id}`;
 
         console.log(`Получаем заказчика по ссылке ... ${url}`);
 
-        const reqAPI = await axios.get(encodeURI(url));
+        let reqAPI = await axios.get(encodeURI(url));
         const data = reqAPI.data;
 
+        url = `${urlAPI}contracts/select/?customerinn=${data.customers.data[0].inn}&perpage=10&page=${page}`;
+        reqAPI = await axios.get(encodeURI(url));
+        let contracts = reqAPI.data;
 
-        res.json({ ok: true, data });
+        res.json({ ok: true, data, contracts });
 
     } catch(e) {
         console.log(e);
@@ -71,23 +74,37 @@ router.post('/getCustomer', async (req, res) => {
 router.post('/getSupplier', async (req, res) => {
     try {
 
-        const { inn, kpp } = req.body;
+        const { inn, kpp, page } = req.body;
 
         let paramsReq = '?';
-        if (inn) paramsReq += `inn=${inn}`;
+        let paramsContacts = '?'
+        if (inn) {
+            paramsReq += `inn=${inn}`;
+            paramsContacts += `supplierinn=${inn}`;
+        }
         if (kpp != 'undefined') {
-            (inn) ? paramsReq += `&kpp=${kpp}` : paramsReq += `kpp=${kpp}`;
+            if (inn) {
+                paramsReq += `&kpp=${kpp}`;
+                paramsContacts += `&supplierkpp=${kpp}`;
+            } else {
+                paramsReq += `kpp=${kpp}`;
+                paramsContacts += `supplierkpp=${kpp}`;
+            }
         }
 
-        const url = `${urlAPI}suppliers/search/${paramsReq}`;
+        let url = `${urlAPI}suppliers/search/${paramsReq}`;
 
         console.log(`Получаем поставщика по ссылке ... ${url}`);
 
-        const reqAPI = await axios.get(encodeURI(url));
+        let reqAPI = await axios.get(encodeURI(url));
         const data = reqAPI.data;
 
+        url = `${urlAPI}contracts/select/${paramsContacts}&perpage=10&page=${page}`;
+        reqAPI = await axios.get(encodeURI(url));
+        contracts = reqAPI.data;
 
-        res.json({ ok: true, data });
+
+        res.json({ ok: true, data, contracts });
 
     } catch(e) {
         console.log(e);

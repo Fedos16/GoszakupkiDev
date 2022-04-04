@@ -1,4 +1,10 @@
 <template>
+  <!-- <div class="options w-9 m-auto grid grid-nogutter">
+    <div class="row grid">
+      <div class="col"><InputText class="w-full" /></div>
+    </div>
+  </div> -->
+
   <div class="options">
     <div class="options_inner">
 
@@ -154,8 +160,15 @@
           <option value="signDate">Старые вверху</option>
         </select>
       </div>
-      <div class="option"></div>
-
+      <div class="option">
+        <label>Контактов на странице</label>
+        <select v-model="perPage" id="perpage">
+          <option value="1">1</option>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+        </select>
+      </div>
     </div>
 
     <div class="options_inner">
@@ -165,14 +178,16 @@
     </div>
 
     <div class="btn_container btn_container-center">
-      <button @click="toApply" class="btn" v-bind:disabled="disabledState == 'Загрузка'">{{ disabledState }}</button>
+      
+      <button @click="toApply" class="btn button" v-bind:disabled="disabledState == 'Загрузка'">{{ disabledState }}</button>
     </div>
   </div>
 </template>
 
 <script>
 
-import AirDatepicker  from 'air-datepicker';
+import AirDatepicker from 'air-datepicker';
+//import InputText from 'primevue/inputtext';
 import 'air-datepicker/air-datepicker.css';
 
 export default {
@@ -189,10 +204,12 @@ export default {
       supplierkpp: '',
       customerregion: '',
       sort: '',
-      fz: ''
+      fz: '',
+      perPage: 50,
+      page: 1
     }
   },
-  props: ['disabledState', 'sortType'],
+  props: ['disabledState', 'sortType', 'currentPage'],
   methods: {
     toApply() {
       let options = {};
@@ -225,6 +242,8 @@ export default {
       if(this.customerregion) options.customerregion = this.customerregion;
       if(this.sort) options.sort = this.sort;
       if(this.fz) options.fz = this.fz;
+      if (this.perPage) options.perpage = this.perPage;
+      if (this.page) options.page = this.page;
       
       this.$emit('options', options);
 
@@ -239,10 +258,15 @@ export default {
   },
   mounted() {
     this.iniAirDatePicker();
+    this.perpage = 50;
   },
   watch: {
     sortType: function (value) {
       this.sort = value;
+      this.toApply();
+    },
+    currentPage: function (value) {
+      this.page = value;
       this.toApply();
     }
   }

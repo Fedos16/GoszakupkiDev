@@ -4,7 +4,7 @@
         <div class="container">
             <div class="result">
                 <div class="result_attr">
-                    <h3 v-if="contract">Информация о контракте № <a :href="contract.contractUrl" target="_blank"><u>{{ id }}</u></a></h3>
+                    <h3 v-if="contract">Информация о контракте № <a :href="contract.contractUrl || contract.printFormUrl.replace('private', 'public')" target="_blank"><u>{{ id }}</u></a></h3>
                 </div>
                 <div class="cart" v-if="contract">
                     <div class="cart_item">

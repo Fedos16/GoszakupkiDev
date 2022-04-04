@@ -10,7 +10,7 @@
       </ul>
     </div>
 
-    <div v-if="contracts.length > 0" class="result_attr">
+    <div v-if="contracts.length > 0" class="result_attr mt-5">
       <h3>Найдено контрактов: {{ totalContracts }} (максимум 500)</h3>
     </div>
 
@@ -80,11 +80,13 @@
           </span>
         </div>
 
-        <button @click="showItemList(contract.regNum)" class="download_btn">
+        <button @click="showItemList(contract.regNum)" class="download_btn button">
           <img src="@/assets/download.png" alt="">
         </button>
 
       </div>
+      
+      <Paginator :rows="Number(perPage)" :alwaysShow="false" :totalRecords="totalContracts" @page="onPage($event)"></Paginator>
 
     </div>
   </div>
@@ -92,18 +94,21 @@
 
 <script>
 
+import Paginator from 'primevue/paginator';
 import excel from 'xlsx';
 
 export default {
+  components: { Paginator },
   data() {
     return {
       contractsData: this.contracts,
       optionsData: this.options,
       isShowItemList: 0,
-      activeContract: null
+      activeContract: null,
+      currentPage: 1,
     }
   },
-  props: ['contracts', 'options', 'totalContracts', 'sortType'],
+  props: ['contracts', 'options', 'totalContracts', 'sortType', 'perPage'],
   methods: {
     downloadCard(e) {
 
@@ -208,8 +213,14 @@ export default {
         e.target.value = 'signDate';
       }
 
+    },
+    onPage(event) {
+      console.log(event.page);
+      this.currentPage = event.page + 1;
+      this.$emit('changeCurrentPage', this.currentPage);
     }
   },
-  mounted() {}
+  mounted() {
+  }
 }
 </script>

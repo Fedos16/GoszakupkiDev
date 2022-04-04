@@ -6,13 +6,16 @@
                 @options="optionFilter"
                 :disabledState="disabledState"
                 :sortType="sort"
+                :currentPage="page"
             />
             <Results
                 :contracts="contracts" 
                 :options="options"
                 :totalContracts="totalContracts"
                 :sortType="sort"
+                :perPage="perPage"
                 @changeStateSort="changeStateSort"
+                @changeCurrentPage="changeCurrentPage"
             />
         </div>
     </div>
@@ -35,7 +38,9 @@ export default {
             totalContracts: 0,
             options: [],
             disabledState: 'Найти',
-            sort: ''
+            sort: '',
+            perPage: 50,
+            page: 1,
         }
     },
     methods: {
@@ -46,6 +51,8 @@ export default {
 
             this.disabledState = 'Загрузка';
             this.contracts = [];
+
+            this.perPage = options.perpage;
 
             if (Object.keys(options).length == 0) {
                 alert('Параметры не заданы');
@@ -69,6 +76,10 @@ export default {
         },
         changeStateSort(name) {
             this.sort = name;
+        },
+        changeCurrentPage(page) {
+            console.log(page + 1);
+            this.page = page;
         }
     },
     mounted() {
