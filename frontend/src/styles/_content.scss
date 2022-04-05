@@ -7,12 +7,34 @@
 
 .container {
   position: relative;
-  height: 100%;
   margin: 0px auto;
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   max-width: 1280px;
   padding: 20px 0px;
+}
+
+.description {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 0px 10px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid $gray;
+
+  p {
+    margin-bottom: 10px;
+    font-size: 16px;
+    
+    span {
+      color: $contrast;
+      font-size: inherit;
+    }
+
+  }
+  p:last-child {
+    margin-bottom: 0px;
+  }
 }
 
 .options_inner {
@@ -37,7 +59,7 @@
     cursor: default;
 
     &.disabled-item {
-      color: gray;
+      color: $gray;
       cursor: not-allowed;
     }
   }
@@ -158,12 +180,12 @@
   margin: 5px 0;
 
   p {
-    color: gray;
+    color: $gray;
   }
 
   u {
     text-decoration: underline;
-    color: rgb(34, 34, 218);
+    color: $contrast;
   }
   u:hover {
     text-decoration: none;

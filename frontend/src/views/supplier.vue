@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="main">
         <Header />
         <div class="container">
             <div class="result">
@@ -107,11 +107,14 @@
                 <Paginator :rows="10" :alwaysShow="false" :totalRecords="totalContracts" @page="onPage($event)"></Paginator>
             </div>
         </div>
+        <Footer />
     </div>
 </template>
 
 <script>
 import Header from '../components/header.vue';
+import Footer from '../components/footer.vue';
+
 import Paginator from 'primevue/paginator';
 import Skeleton from 'primevue/skeleton';
 
@@ -133,7 +136,7 @@ export default {
             isLoadingContracts: true
         }
     },
-    components: { Header, Skeleton, Paginator },
+    components: { Header, Skeleton, Paginator, Footer },
     async created() {
         const route = useRoute();
         document.title = 'Поставщик';

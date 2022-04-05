@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="main">
         <Header />
         <div class="container">
             <div class="result">
@@ -27,7 +27,7 @@
                         <p>Федеральный закон</p>
                         <span class="fool-btn">{{ contract.fz }}</span>
                     </div>
-                    <div class="cart_item">
+                    <div class="cart_item" v-if="contract.signDate">
                         <p>Дата заключения</p>
                         <span class="fool-btn">{{ new Date(contract.signDate).toLocaleDateString('ru-RU') }}</span>
                     </div>
@@ -55,7 +55,7 @@
                             <tbody>
                             <tr v-for="(prod, index) in products" :key="prod">
                                 <td>{{ index + 1 }}</td>
-                                <td>{{ prod.name }}</td>
+                                <td>{{ prod.name || prod.additionalInfo }}</td>
                                 <td v-if="prod.OKEI">{{ prod.OKEI.name }}</td><td v-else>?</td>
                                 <td v-if="prod.quantity">{{ prod.quantity }}</td><td v-else>?</td>
                                 <td class="width-max" v-if="prod.price">{{ moneyFormat(prod.price) }}</td><td v-else>?</td>
@@ -67,11 +67,14 @@
                 </div>
             </div>
         </div>
+        <Footer />
     </div>
 </template>
 
 <script>
 import Header from '../components/header.vue';
+import Footer from '../components/footer.vue';
+
 import { useRoute } from 'vue-router'
 import axios from 'axios';
 
@@ -79,7 +82,7 @@ const serverUrl = process.env.VUE_APP_SERVER_URL;
 
 export default {
     name: 'Contract',
-    components: { Header },
+    components: { Header, Footer },
     async created() {
         document.title = 'Контракт';
         await this.setDataFromServer();

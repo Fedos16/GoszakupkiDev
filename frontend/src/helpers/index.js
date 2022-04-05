@@ -1,5 +1,6 @@
 export default {
     moneyFormat(money) {
+        if (!money) return money;
         money = ((money).toFixed(2)).replace('.', ',');
         return (String(money).replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, '$1 ')).replace(' руб.', '');
     },

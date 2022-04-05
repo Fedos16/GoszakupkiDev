@@ -9,7 +9,7 @@
 
       <div class="option">
         <label for="contractsDate">Дата заключения контракта</label>
-        <input v-model="daterange" id="contractsDate" type="text">
+        <input v-model="daterange" id="contractsDate" type="text" placeholder="Мой ответ">
       </div>
 
       <div class="option">

@@ -63,7 +63,7 @@
           <span class="fool-btn">№ {{ contract.fz }} ФЗ</span>
         </div>
 
-        <div class="cart_item">
+        <div class="cart_item" v-if="contract.signDate">
           <p>Дата заключения:</p>
           <span class="fool-btn">{{ new Date(contract.signDate).toLocaleDateString('ru-RU') }}</span>
         </div>
