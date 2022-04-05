@@ -46,8 +46,8 @@
                             <tr>
                                 <th>#</th>
                                 <th>Наименование</th>
-                                <th>Ед. измерения</th>
-                                <th>Количество</th>
+                                <th>Ед. изм.</th>
+                                <th>Кол-во</th>
                                 <th>Стоимость</th>
                                 <th>Сумма</th>
                             </tr>
@@ -58,8 +58,8 @@
                                 <td>{{ prod.name }}</td>
                                 <td v-if="prod.OKEI">{{ prod.OKEI.name }}</td><td v-else>?</td>
                                 <td v-if="prod.quantity">{{ prod.quantity }}</td><td v-else>?</td>
-                                <td v-if="prod.price">{{ moneyFormat(prod.price) }}</td><td v-else>?</td>
-                                <td v-if="prod.sum">{{ moneyFormat(prod.sum) }}</td><td v-else>?</td>
+                                <td class="width-max" v-if="prod.price">{{ moneyFormat(prod.price) }}</td><td v-else>?</td>
+                                <td class="width-max" v-if="prod.sum">{{ moneyFormat(prod.sum) }}</td><td v-else>?</td>
                             </tr>
                             </tbody>
                         </table>

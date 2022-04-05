@@ -1,10 +1,4 @@
 <template>
-  <!-- <div class="options w-9 m-auto grid grid-nogutter">
-    <div class="row grid">
-      <div class="col"><InputText class="w-full" /></div>
-    </div>
-  </div> -->
-
   <div class="options">
     <div class="options_inner">
 

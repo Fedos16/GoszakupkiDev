@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="main">
         <Header />
         <div class="container">
             <Options 
@@ -18,11 +18,14 @@
                 @changeCurrentPage="changeCurrentPage"
             />
         </div>
+        <Footer />
     </div>
 </template>
 
 <script>
 import Header from '../components/header.vue';
+import Footer from '../components/footer.vue';
+
 import Options from '../components/options.vue';
 import Results from '../components/result.vue';
 
@@ -45,7 +48,7 @@ export default {
     },
     methods: {
         title() {
-            document.title = 'Мой проект'
+            document.title = 'zakupgos'
         },
         async optionFilter(options) {
 
@@ -85,7 +88,7 @@ export default {
     mounted() {
         this.title()
     },
-    components: { Header, Options, Results }
+    components: { Header, Options, Results, Footer }
 }
 </script>
 
